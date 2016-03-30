@@ -1,0 +1,55 @@
+++++++++++++++
++ Esc/Pos Pi +
+++++++++++++++
+
+# Intro
+
+The Esc/Pos Pi Java library provides printing to ESC/POS compatible Thermal printer from Raspberry Pi.
+you can print :
+- text (many styles and encoding)
+- barcode
+- QRCode
+- Image
+
+->>> Only Serial printers are compatible for now <<<-
+
+It is largely based on python-escpos from Manuel F Martinez (https://github.com/python-escpos/python-escpos)
+The code for image printing was written by Gustavo De Micheli (https://github.com/nMoncho)
+
+---------
+# Installation
+
+This library uses Pi4J (wich uses WiringPi)
+- Install WiringPi : http://wiringpi.com/download-and-install/
+- Install Pi4J : http://pi4j.com/install.html
+- Using Serial Port
+    * Permissions : Add yourself to the uucp group to use the port without sudo
+        $sudo usermod -a -G uucp pi
+    * Disabling the Serial Console preconfigured for system console (Systemd os like Raspbian Jessie)
+        $sudo sed -i.old 's/[^ ]*ttyAMA0[^ ]*//g' /boot/cmdline.txt
+        $sudo systemctl disable serial-getty@ttyAMA0.service
+
+---------
+# HardWare
+
+To connect a serial printer you need a TTL to RS232 adapter ~$3-$10
+
+
+---------
+# Usage
+
+Printer p = new Printer("serial");
+try {
+    p.open("/dev/ttyAMA0", 9600);
+    p.setTextNormal();
+    p.printLn("Hello World");
+    p.barcode("1324354657687","EAN13",64,2,"","");
+    p.printQRCode("WHAT A NICE CODE");
+    p.lineBreak();
+    p.printImage("myPic.jpg");
+} catch (BarcodeSizeError | ConnectionException | IOException | QRCodeException e) {
+    e.printStackTrace();
+} finally {
+    p.cut();
+    p.close();
+}
