@@ -9,10 +9,12 @@ node{
     }
     
     stage("copy"){
-    	if  (env.BRANCH_NAME != 'master') {
+    	if  (BRANCH_NAME == 'master') {
         	echo BRANCH_NAME
-        } else if (env.BRANCH_NAME.startsWith('test')){
-        	echo 'YES !' 
+        	step ([$class: 'CopyArtifact', projectName: 'W3-deploy-PROD', filter: 'target/*.jar']);
+        } else if (BRANCH_NAME.startsWith('test')){
+        	echo 'YES !' + BRANCH_NAME
+        	step ([$class: 'CopyArtifact', projectName: 'W3-deploy-PREPROD', filter: 'target/*.jar']);
         }
     }
 }
