@@ -9,7 +9,11 @@ node{
     }
     
     stage("copy"){
-        echo BRANCH_NAME
+    	if  (env.BRANCH_NAME != 'master') {
+        	echo BRANCH_NAME
+        } else if (env.BRANCH_NAME.startsWith('test')){
+        	echo 'YES !' 
+        }
     }
 }
 
