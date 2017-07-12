@@ -13,7 +13,13 @@ node{
     }
 
     stage("notify"){
-    	slackSend channel: '#team-vem', color: 'good', message: 'Deploy : http://localhost:8080/job/W3-deploy-PREPROD/build?token=OAKej5o40yY9XqyFiY8b7DEYY6qv5XPd', teamDomain: 'devlescrous', tokenCredentialId : '1'
+        if  (BRANCH_NAME == 'master') {
+        	echo BRANCH_NAME + ' => Deployement PROD'
+	    	slackSend channel: '#team-vem', color: 'good', message: 'Deploy : http://localhost:8080/job/W3-deploy-PREPROD/build?token=OAKej5o40yY9XqyFiY8b7DEYY6qv5XPd', teamDomain: 'devlescrous', tokenCredentialId : '1'
+        } else if (BRANCH_NAME.startsWith('release')){
+        	echo BRANCH_NAME + ' => Deployement PREPROD'
+    		slackSend channel: '#team-vem', color: 'good', message: 'Deploy : http://localhost:8080/job/W3-deploy-PROD/build?token=OAKej5o40yY9XqyFiY8b7DEYY6qv5XPd', teamDomain: 'devlescrous', tokenCredentialId : '1'        	    
+        }
     }
 }
 
