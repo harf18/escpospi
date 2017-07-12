@@ -11,6 +11,10 @@ node{
     stage("Archive"){
     	archiveArtifacts artifacts: '**/target/*.jar'
     }
+
+    stage("notify"){
+    	slackSend channel: '#team-vem', color: 'good', message: 'Deploy : http://localhost:8080/job/W3-deploy-PREPROD/build?token=OAKej5o40yY9XqyFiY8b7DEYY6qv5XPd', teamDomain: 'team-vem', tokenCredentialId : '1'
+    }
 }
 
 def withMaven(def body){
@@ -21,3 +25,5 @@ def withMaven(def body){
         body.call()
     }
 }
+
+
