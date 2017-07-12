@@ -8,6 +8,9 @@ node{
         withMaven { sh 'mvn clean verify' }
     }
     
+    stage("Archive"){
+    	archiveArtifacts artifacts: '**/target/*.jar'
+    }
 }
 
 def withMaven(def body){
