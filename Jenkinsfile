@@ -6,7 +6,6 @@ node{
     }
 
     def pom = readMavenPom file:'pom.xml'
-    currentBuild.description = "${pom.getVersion()} - ${short_commit}"
 
     stage("maven"){
         withMaven { sh 'mvn clean verify' }
