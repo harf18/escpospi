@@ -8,6 +8,10 @@
     <artifactId>escpospi</artifactId>
     <version>1.0</version>
 
+    <properties>
+         <main>net.vibrac.escpospi.Main</main>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.pi4j</groupId>
@@ -73,14 +77,22 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
                     <archive>
                         <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>net.vibrac.escpospi.Main</mainClass>
+                            <mainClass>${main}</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
