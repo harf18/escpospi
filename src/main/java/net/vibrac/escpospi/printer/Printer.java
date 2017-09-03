@@ -21,6 +21,9 @@ public class Printer {
     // Line Spacing
     private static final byte[] LINE_SPACE_24   = {0x1b,0x33,24}; // Set the line spacing at 24
     private static final byte[] LINE_SPACE_30   = {0x1b,0x33,30}; // Set the line spacing at 30
+
+    private static final byte[] ROTATE    = {0x1b,0x56,1};
+    private static final byte[] NO_ROTATE    = {0x1b,0x56,0};
     //Image
     private static final byte[] SELECT_BIT_IMAGE_MODE = {0x1B, 0x2A, 33};
     // Printer hardware
@@ -104,7 +107,7 @@ public class Printer {
 
     public void print(String text) throws ConnectionException {
         try {
-            bus.write(text.getBytes("UTF-8"));
+            bus.write(text.getBytes("IBM00858"));
         } catch (UnsupportedEncodingException e) {
             throw new ConnectionException("Unable to print text", e);
         }
@@ -124,6 +127,10 @@ public class Printer {
         }
     }
 
+    public void rotate(){
+        bus.write(ROTATE);
+    }
+
     public void printQRCode(String value, int size) throws QRCodeException {
         QRCodeGenerator q = new QRCodeGenerator();
         printImage(q.generate(value, size));
@@ -132,6 +139,26 @@ public class Printer {
     public void printQRCode(String value) throws QRCodeException {
         printQRCode(value, 150);
     }
+
+    public void printLeftRightNormal(String leftWord, String rightWord) throws ConnectionException {
+        printLeftRight(42, leftWord, rightWord);
+    }
+
+    public void printLeftRight2Width(String leftWord, String rightWord) throws ConnectionException {
+        printLeftRight(21, leftWord, rightWord);
+    }
+
+    public void printLeftRight(int lineSize, String leftWord, String rightWord) throws ConnectionException {
+        int spacesQty = lineSize - (leftWord.length() + rightWord.length());
+        String stringToPrint = leftWord;
+        while(spacesQty > 0){
+            stringToPrint += " ";
+            spacesQty--;
+        }
+        stringToPrint += rightWord;
+        print(stringToPrint);
+    }
+
 
     public void setTextSizeNormal(){
         setTextSize(1,1);
@@ -393,6 +420,19 @@ public class Printer {
         }
         bus.write(CTL_LF);
         bus.write(LINE_SPACE_30);
+    }
+
+    public void setCharCodeWithAccent(){
+        byte[] t = {0x1b,0x74,0x13};
+        bus.write(t);
+        byte[] t2 = {(byte)0xa4};
+        bus.write(t2);
+
+    }
+
+    public void setCharCode(byte b){
+        byte[] t = {0x1b,0x74,b};
+        bus.write(t);
     }
 
     public void setCharCode(String code)  {

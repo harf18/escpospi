@@ -6,7 +6,7 @@
 
     <groupId>net.vibrac</groupId>
     <artifactId>escpospi</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
 
     <properties>
          <main>net.vibrac.escpospi.Main</main>
